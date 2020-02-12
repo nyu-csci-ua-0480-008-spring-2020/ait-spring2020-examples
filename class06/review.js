@@ -25,7 +25,7 @@ console.log(req.method, req.path);
 */
 const routes = {
   '/': function(sock) {
-    body = '<strong>this is the home page</strong>'; 
+    body = '<link rel="stylesheet" href="/foo.css"><strong>this is the home page</strong>'; 
     responseString = `HTTP/1.1 200 OK
 Content-Type: text/html
 
@@ -43,8 +43,23 @@ ${body}
 `
     sock.write(responseString);
     sock.end();
-  }
+  },
+  '/textfile': function(sock) {
+    // read mytext.txt
+    // send back as part of the response
+    const fs = require('fs');
+    fs.readFile('mytext.txt', 'utf8', function(err, data) {
+      if(!err) {
+        responseString = `HTTP/1.1 200 OK
+Content-Type: text/plain
 
+${data}
+`;
+        sock.write(responseString);
+        sock.end();
+      } 
+    });
+  }
 }
 
 const server = net.createServer(handleConnect);
@@ -64,31 +79,22 @@ function handleData(sock, d) {
   let body;
   let responseString;
   console.log(req.method, req.path);
-  if(req.path === '/hello') {
-    body = '<em>hello</em>'; 
-    responseString = `HTTP/1.1 200 OK
-Content-Type: text/html
-
-${body}
-`;
-  } else if(req.path === '/bye') {
-    // console.log(oops);
-    body = '<strong>bye</strong>'; 
-    responseString = `HTTP/1.1 200 OK
-Content-Type: text/html
-
-${body}
-`;
+  // does the path exist in our routes object
+  if(routes.hasOwnProperty(req.path)) {
+    // grabbing function that is associated with
+    // the path in the http request
+    const routeHandler = routes[req.path];
+    routeHandler(sock);
   } else {
     responseString = `HTTP/1.1 404 OK
 Content-Type: text/html
 
 404
 `;
+    sock.write(responseString);
+    sock.end();
   }
 
-  sock.write(responseString);
-  sock.end();
 }
 
 server.listen(3000, '127.0.0.1');
