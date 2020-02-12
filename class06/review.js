@@ -1,3 +1,4 @@
+// forms
 const net = require('net');
 
 class Request {
@@ -9,6 +10,7 @@ class Request {
 
     // takes all props of 2nd arg...and adds to first arg
     Object.assign(this, {method, path, version});
+    this.rawRequest = s;
   }
 
   parseHeaders() {
@@ -59,7 +61,23 @@ ${data}
         sock.end();
       } 
     });
-  }
+  },
+  '/form': function(sock) {
+    // read mytext.txt
+    // send back as part of the response
+    const fs = require('fs');
+    fs.readFile('form.html', 'utf8', function(err, data) {
+      if(!err) {
+        responseString = `HTTP/1.1 200 OK
+Content-Type: text/html
+
+${data}
+`;
+        sock.write(responseString);
+        sock.end();
+      } 
+    });
+  },
 }
 
 const server = net.createServer(handleConnect);
@@ -78,7 +96,7 @@ function handleData(sock, d) {
   const req = new Request(rawRequest);
   let body;
   let responseString;
-  console.log(req.method, req.path);
+  console.log(req.method, req.path, req.rawRequest);
   // does the path exist in our routes object
   if(routes.hasOwnProperty(req.path)) {
     // grabbing function that is associated with
@@ -97,7 +115,24 @@ Content-Type: text/html
 
 }
 
+// templating
+// {{}} <-- this denotes a variable
+// <html>
+// <body>....
+// <div>{{score}}</div>
 server.listen(3000, '127.0.0.1');
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
