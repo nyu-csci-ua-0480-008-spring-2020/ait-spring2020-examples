@@ -1,0 +1,47 @@
+numbers:
+
+<!--
+	method attribute specifies the request method (method))
+	action attribute specifies where to make the request (path)
+	blank action goes to path that you're currently on
+-->
+<form method="GET" action="/numbers">
+		Threshold: <input type="text" name="n">
+		<input type="submit">
+</form>
+
+<form method="POST" action="">
+		New Number: <input type="text" name="newNumber">
+		<input type="submit">	
+</form>
+<!-- POST vs GET 
+POST when you don't want data in url... (form input not in history)
+POST - creating a new resource / adding name / update data
+
+GET - if you want something bookmarkable
+GET - strictly reading data
+
+-->
+<!-- GET /numbers?n=4 HTTP/1.1 
+form method="POST" action="/login"
+
+name="username"   --- value filled in jjv222
+name="password"   ---whatever
+
+
+POST /login HTTP/1.1
+Content-Type: form-www url encoded
+Content-Length: 25
+
+username=jjv222&password=whatever
+-->
+
+
+
+
+Filtered with {{filter}}
+<ul>
+{{#each numbers as |n|}}
+<li>{{n}}</li>
+{{/each}}
+</ul>
