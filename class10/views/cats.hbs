@@ -1,0 +1,15 @@
+<form method="GET" action="">
+		Min Lives: <input type="number" name="minLives">
+		<input type="submit" value="Filter!!!!">	
+</form>
+<form method="POST" action="">
+		Name: <input type="text" name="name">
+		Lives: <input type="number" name="lives">
+		<input type="submit" value="Create New Cat!!!">	
+</form>
+
+<ul>
+{{#each cats as |c|}}
+<li>{{c.name}} - {{c.lives}}</li>
+{{/each}}
+</ul>
