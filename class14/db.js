@@ -7,6 +7,8 @@ const mongoose = require('mongoose');
 const ArticleSchema = new mongoose.Schema({
   title: {type: String, required: true},
   content: String
+  // if we add required true for content, it will only affect to
+  // articles coming in from this app
   // id: String
   // tags: [Tag]
   // date: Date
